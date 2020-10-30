@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hell  o, world!");
+    guess_game::execute();
 }
