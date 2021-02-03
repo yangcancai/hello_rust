@@ -35,18 +35,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hello_rust"
-version = "0.1.0"
-dependencies = [
- "guess_game",
- "http_server",
-]
-
-[[package]]
-name = "http_server"
-version = "0.1.0"
-
-[[package]]
 name = "libc"
 version = "0.2.80"
 source = "registry+https://github.com/rust-lang/crates.io-index"
