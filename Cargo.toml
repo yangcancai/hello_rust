@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 guess_game = { path = "guess_game"}
 http_server = { path = "http_server"}
+ futures = {version = "0.3.12", features = ["thread-pool"]}

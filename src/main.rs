@@ -1,4 +1,6 @@
 mod lib;
+
+use lib::async_test;
 use lib::control_flow;
 use lib::data_type;
 use lib::functions;
@@ -13,6 +15,6 @@ fn main() {
     image::execute();
     enum_struct::execute();
     oop::execute();
-
-    http_server::execute();
+    async_test::execute();
+    // http_server::execute();
 }

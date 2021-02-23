@@ -94,12 +94,12 @@ impl Drop for ThreadPool {
 }
 pub fn execute() {
     let listener = TcpListener::bind("127.0.0.1:8000").unwrap();
-    let pool = ThreadPool::new(4);
     listener
         .set_nonblocking(true)
         .expect("Cannot set non-blocking");
     let (sender, receiver)  = mpsc::channel();
     let thread = thread::spawn(move || {
+    let pool = ThreadPool::new(4);
     for stream in listener.incoming(){
         match stream {
             Ok(s) => {
