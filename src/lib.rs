@@ -463,7 +463,7 @@ pub mod async_test {
                 pool.spawn_ok(fut_tx_result);
                 println!("after spawn_ok ");
 
-                let fut_values = rx.collect();
+                let fut_values = rx.map(|v| v + 1).collect();
 
                 // Use the executor provided to this async block to wait for the
                 // future to complete.
@@ -477,7 +477,7 @@ pub mod async_test {
             println!("before executor.");
             let values: Vec<i32> = executor::block_on(fut_values);
 
-            println!("Values={:?}", values);
+            println!("Values={:?}", values[0]);
         });
         let mut line = String::new();
         let stdin = std::io::stdin();
