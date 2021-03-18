@@ -1,5 +1,6 @@
-mod lib;
 mod daemon;
+mod lib;
+use daemon::demo;
 use futures::executor;
 use hello_rust::rc_refcell_test;
 use lib::async_test;
@@ -9,7 +10,6 @@ use lib::functions;
 use lib::macro_test;
 use lib::struction;
 use lib::time_test;
-use daemon::demo;
 use lib::{enum_struct, image, oop};
 
 // #[get("/")]
@@ -30,6 +30,6 @@ fn main() {
     macro_test::execute();
     // rc_refcell_test::execute();
     time_test::execute();
-    demo::execute();
+    demo::execute(false);
     // http_server::execute();
 }
