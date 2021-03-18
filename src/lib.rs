@@ -1,5 +1,4 @@
 use std::ops::Mul;
-
 pub mod data_type {
     pub fn execute() {
         // let i8 = 0;
@@ -451,8 +450,7 @@ pub mod async_test {
                                 tx.unbounded_send(0).expect("Failed to send");
                                 break;
                             }
-                            Err(_e) => {
-                            }
+                            Err(_e) => {}
                         }
                     }
                 };
@@ -486,5 +484,156 @@ pub mod async_test {
         main_sender.send(()).unwrap();
         if let Ok(_) = thread.join() {};
         println!("future thread finished!");
+    }
+}
+pub mod rc_refcell_test {
+    use std::cell::RefCell;
+    use std::rc::Rc;
+    use List::{Cons, Nil};
+
+    #[derive(Debug)]
+    enum List<'a> {
+        Cons(Rc<RefCell<i32>>, &'a List<'a>),
+        Nil,
+    }
+    pub fn execute() {
+        let value = Rc::new(RefCell::new(5));
+
+        let a = Cons(Rc::clone(&value), &Nil);
+
+        let b = Cons(Rc::new(RefCell::new(3)), &a);
+        let c = Cons(Rc::new(RefCell::new(4)), &a);
+
+        *value.borrow_mut() += 10;
+        println!("a after = {:?}", a);
+        println!("b after = {:?}", b);
+        println!("c after = {:?}", c);
+        let m = MockMessenger::new();
+        m.send("kkk");
+    }
+    pub trait Messenger {
+        fn send(&self, msg: &str);
+    }
+    struct MockMessenger {
+        sent_messages: Rc<RefCell<Data>>,
+    }
+    #[derive(Debug)]
+    struct Data {
+        data: Vec<String>,
+    }
+    impl Data {
+        fn log(&mut self) {
+            println!("data log = {:?}", self.data)
+        }
+    }
+    impl MockMessenger {
+        fn new() -> MockMessenger {
+            MockMessenger {
+                sent_messages: Rc::new(RefCell::new(Data { data: vec![] })),
+            }
+        }
+    }
+
+    impl Messenger for MockMessenger {
+        fn send(&self, message: &str) {
+            self.sent_messages
+                .borrow_mut()
+                .data
+                .push(String::from(message));
+            self.sent_messages
+                .borrow_mut()
+                .data
+                .push(String::from(message));
+            self.sent_messages.borrow_mut().log();
+            // let mut one_borrow = self.sent_messages.borrow_mut();
+            // let mut two_borrow = self.sent_messages.borrow_mut();
+
+            // one_borrow.data.push(String::from(message));
+            // two_borrow.data.push(String::from(message));
+        }
+    }
+}
+pub mod macro_test {
+    trait IntoSoa {
+        fn log(self);
+    }
+    macro_rules! soa {
+        ($( $t: ident),*) => {
+           impl <$( $t),*> IntoSoa for ($( Vec<$t>, )*){
+              fn log(self) {
+                  let (a, b) = self;
+                  println!("{:?}", a.len());
+                  println!("{:?}", b.len())
+                  }
+              }
+           }
+        }
+    soa!(A, B);
+    pub fn execute() {
+        let a = (vec![1], vec![2]);
+        a.log();
+        let a = vec![1, 2];
+        a.into_iter();
+        let tup = (1.3, 1, 'c');
+
+        let slice: &[&dyn (::std::fmt::Display)] = &[&tup.0, &tup.1, &tup.2];
+        let parts: Vec<_> = slice.iter().map(|x| x.to_string()).collect();
+        let joined = parts.join(", ");
+
+        println!("{}", joined);
+    }
+}
+
+mod write_for_cursor {
+    use std::fs::File;
+    use std::io::prelude::*;
+    use std::io::{self, SeekFrom};
+
+    // a library function we've written
+    fn write_ten_bytes_at_end<W: Write + Seek>(writer: &mut W) -> io::Result<()> {
+        writer.seek(SeekFrom::End(-10))?;
+
+        for i in 0..10 {
+            writer.write(&[i])?;
+        }
+
+        // all went well
+        Ok(())
+    }
+
+    // Here's some code that uses this library function.
+    //
+    // We might want to use a BufReader here for efficiency, but let's
+    // keep this example focused.
+    // let mut file = File::create("foo.txt")?;
+
+    // write_ten_bytes_at_end(&mut file)?;
+
+    // now let's write a test
+    #[test]
+    fn test_writes_bytes() {
+        // setting up a real File is much slower than an in-memory buffer,
+        // let's use a cursor instead
+        use std::io::Cursor;
+        let mut buff = Cursor::new(vec![0; 15]);
+
+        write_ten_bytes_at_end(&mut buff).unwrap();
+        assert_eq!(&buff.get_ref()[5..15], &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    }
+}
+pub mod time_test {
+    extern crate chrono;
+    use chrono::prelude::DateTime;
+    use chrono::Utc;
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
+    pub fn execute() {
+        // Creates a new SystemTime from the specified number of whole seconds
+        // 计算北京时间
+        let d = UNIX_EPOCH + Duration::from_secs(1615966582 + 3600 * 8);
+        // Create DateTime from SystemTime
+        let datetime = DateTime::<Utc>::from(d);
+        // Formats the combined date and time with the specified format string.
+        let timestamp_str = datetime.format("%Y-%m-%d %H:%M:%S").to_string();
+        println! {"{}",timestamp_str};
     }
 }
