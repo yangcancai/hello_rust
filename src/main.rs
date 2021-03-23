@@ -32,4 +32,5 @@ fn main() {
     time_test::execute();
     demo::execute(false);
     // http_server::execute();
+    data_structure::execute();
 }
