@@ -3,6 +3,10 @@
 version = 3
 
 [[package]]
+name = "alloc"
+version = "0.1.0"
+
+[[package]]
 name = "autocfg"
 version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -194,6 +198,7 @@ dependencies = [
 name = "hello_rust"
 version = "0.1.0"
 dependencies = [
+ "alloc",
  "chrono",
  "ctrlc",
  "daemonize",
