@@ -76,5 +76,6 @@ fn main() {
     // demo::execute(false);
     // http_server::execute();
     // data_structure::execute();
-    alloc::execute();
+    // alloc::execute();
+    rabbit::execute();
 }
