@@ -15,22 +15,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-   
+
 // @doc
 //
 // @end
 // Created : 2021-10-25T08:22:05+00:00
 //-------------------------------------------------------------------
-use tokio::sync::{oneshot, mpsc};
+use tokio::sync::{mpsc, oneshot};
 
 struct MyActor {
     receiver: mpsc::Receiver<ActorMessage>,
     next_id: u32,
 }
 enum ActorMessage {
-    GetUniqueId {
-        respond_to: oneshot::Sender<u32>,
-    },
+    GetUniqueId { respond_to: oneshot::Sender<u32> },
 }
 
 impl MyActor {
@@ -50,7 +48,7 @@ impl MyActor {
                 // This can happen if the `select!` macro is used
                 // to cancel waiting for the response.
                 let _ = respond_to.send(self.next_id);
-            },
+            }
         }
     }
 }
@@ -60,7 +58,6 @@ async fn run_my_actor(mut actor: MyActor) {
         actor.handle_message(msg);
     }
 }
-
 
 #[derive(Clone)]
 pub struct MyActorHandle {
@@ -78,9 +75,7 @@ impl MyActorHandle {
 
     pub async fn get_unique_id(&self) -> u32 {
         let (send, recv) = oneshot::channel();
-        let msg = ActorMessage::GetUniqueId {
-            respond_to: send,
-        };
+        let msg = ActorMessage::GetUniqueId { respond_to: send };
 
         // Ignore send errors. If this send fails, so does the
         // recv.await below. There's no reason to check the
