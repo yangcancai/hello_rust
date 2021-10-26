@@ -66,7 +66,7 @@ impl MyActor {
 
 impl MyHandler {
     pub fn new() -> Self {
-        let (s, r) = mpsc::channel(8);
+        let (s, r) = mpsc::channel(1);
         let mut actor = MyActor::new(r);
         let join_handler = tokio::spawn(async move { actor.run().await });
         MyHandler {
