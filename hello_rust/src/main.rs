@@ -77,5 +77,54 @@ fn main() {
     // http_server::execute();
     // data_structure::execute();
     // alloc::execute();
-    rabbit::execute();
+    // rabbit::execute();
+    println!(
+        "{:?},{:?},{:?},{:?},{:?}",
+        Row::Value(0),
+        Row::Value("aa"),
+        Row::Value(1),
+        Row::Value(vec![0, 1, 2, 3]),
+        Row::Value(1).is_integer()
+    );
+    let s1 = String::from("kkk");
+}
+
+struct Ref;
+
+struct Container<'a> {
+  r : &'a Ref
+}
+
+struct ContainerB<'a> {
+  c : Container<'a>
+}
+
+trait ToC<'a> {
+  fn to_c<'b>(&self, r : &'b Ref) -> &Container<'a>;
+}
+impl <'a> ToC<'a> for ContainerB<'a> {
+    fn to_c<'b>(&self, _r: &'b Ref) -> &Container<'a> {
+       &self.c 
+    }
+}
+
+#[derive(Debug)]
+enum Row<T> {
+    Value(T),
+}
+use std::any::type_name;
+fn type_of<T>(_: T) -> &'static str {
+    type_name::<T>()
+}
+impl<T> Row<T> {
+    pub fn is_integer(self) -> bool {
+        let Row::Value(value) = self;
+        match type_of(value) {
+            "i8" | "i16" | "i32" | "i64" | "i128" | "u8" | "u16" | "u32" | "u64" | "u128" => true,
+            o => {
+                println!("{}", o);
+                false
+            }
+        }
+    }
 }
