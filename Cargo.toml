@@ -1,2 +1,2 @@
 [workspace]
-members=["hello_rust", "demon_cli", "proxy", "future"]
+members=["hello_rust", "demon_cli", "proxy", "future", "hello_tokio"]
