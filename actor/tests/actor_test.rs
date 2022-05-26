@@ -18,12 +18,12 @@ async fn actor() {
     for i in 1..100 {
         assert_eq!(my.incr().await, Ok(i));
     }
-    
+
     my.close();
     assert_eq!(my.incr().await, Err(()));
 }
 #[test]
-fn multiple_call(){
+fn multiple_call() {
     use tokio::runtime::Runtime;
     // Create the runtime
     let rt = Runtime::new().unwrap();
@@ -32,15 +32,15 @@ fn multiple_call(){
     let my = MyHandler::new();
     let res = rt.block_on(async { my.incr().await });
     assert_eq!(res, Ok(1));
-    let (s,r) = std::sync::mpsc::channel();
-    let join = std::thread::spawn(move|| {
-	    let _res = rt.block_on(async { my.incr().await });
-	    let res = rt.block_on(async { my.incr().await });
-	    s.send(res);
+    let (s, r) = std::sync::mpsc::channel();
+    let join = std::thread::spawn(move || {
+        let _res = rt.block_on(async { my.incr().await });
+        let res = rt.block_on(async { my.incr().await });
+        s.send(res);
     });
     let rt = Runtime::new().unwrap();
     let a = r.recv();
-    assert_eq!(a.unwrap(),Ok(3));
+    assert_eq!(a.unwrap(), Ok(3));
     join.join();
 }
 

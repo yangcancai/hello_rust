@@ -87,7 +87,7 @@ impl Drop for ThreadPool {
         println!("Shutting down all workers!");
         for worker in &mut self.workers {
             if let Some(thread) = worker.thread.take() {
-                if let Ok(_) = thread.join(){}
+                if let Ok(_) = thread.join() {}
             }
         }
     }
@@ -97,35 +97,36 @@ pub fn execute() {
     listener
         .set_nonblocking(true)
         .expect("Cannot set non-blocking");
-    let (sender, receiver)  = mpsc::channel();
+    let (sender, receiver) = mpsc::channel();
     let thread = thread::spawn(move || {
-    let pool = ThreadPool::new(4);
-    for stream in listener.incoming(){
-        match stream {
-            Ok(s) => {
-                pool.execute(|| {
-                    handle_connection(s);
-                });
-            }
-            Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
-                thread::sleep(Duration::from_millis(1));
-                // was told terimnate.
-                if let Ok(_) = receiver.try_recv(){
+        let pool = ThreadPool::new(4);
+        for stream in listener.incoming() {
+            match stream {
+                Ok(s) => {
+                    pool.execute(|| {
+                        handle_connection(s);
+                    });
+                }
+                Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
+                    thread::sleep(Duration::from_millis(1));
+                    // was told terimnate.
+                    if let Ok(_) = receiver.try_recv() {
                         break;
-                };
-                // continute
-                continue;
+                    };
+                    // continute
+                    continue;
+                }
+                Err(e) => panic!("encountered IO error: {}", e),
             }
-            Err(e) => panic!("encountered IO error: {}", e),
         }
-    }});
+    });
     let mut line = String::new();
     let stdin = io::stdin();
     let _ = stdin.lock().read_line(&mut line);
     println!("Main thread: Shutting down.");
     sender.send(()).unwrap();
-    // waits for other threads finish 
-    if let Ok(_) = thread.join(){};
+    // waits for other threads finish
+    if let Ok(_) = thread.join() {};
     println!("Main thread: the associated thread was finished.");
 }
 fn handle_connection(mut stream: TcpStream) {
