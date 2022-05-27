@@ -92,19 +92,19 @@ fn main() {
 struct Ref;
 
 struct Container<'a> {
-  r : &'a Ref
+    r: &'a Ref,
 }
 
 struct ContainerB<'a> {
-  c : Container<'a>
+    c: Container<'a>,
 }
 
 trait ToC<'a> {
-  fn to_c<'b>(&self, r : &'b Ref) -> &Container<'a>;
+    fn to_c<'b>(&self, r: &'b Ref) -> &Container<'a>;
 }
-impl <'a> ToC<'a> for ContainerB<'a> {
+impl<'a> ToC<'a> for ContainerB<'a> {
     fn to_c<'b>(&self, _r: &'b Ref) -> &Container<'a> {
-       &self.c 
+        &self.c
     }
 }
 

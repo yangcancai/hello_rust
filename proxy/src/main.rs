@@ -1,7 +1,7 @@
-use hyper::{client::HttpConnector, client::Client, Uri, Request};
 use futures::{TryFutureExt, TryStreamExt};
-use hyper_proxy::{Proxy, ProxyConnector, Intercept};
 use headers::Authorization;
+use hyper::{client::Client, client::HttpConnector, Request, Uri};
+use hyper_proxy::{Intercept, Proxy, ProxyConnector};
 use std::error::Error;
 
 #[tokio::main]
@@ -18,11 +18,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Connecting to http will trigger regular GETs and POSTs.
     // We need to manually append the relevant headers to the request
     let uri: Uri = "http://my-remote-website.com".parse().unwrap();
-    let mut req = Request::get(uri.clone()).body(hyper::Body::empty()).unwrap();
+    let mut req = Request::get(uri.clone())
+        .body(hyper::Body::empty())
+        .unwrap();
 
     if let Some(headers) = proxy.http_headers(&uri) {
         req.headers_mut().extend(headers.clone().into_iter());
     }
 
-   Ok(())
+    Ok(())
 }

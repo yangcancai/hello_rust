@@ -4,11 +4,11 @@ fn sum(m: i32) -> i64 {
 fn remove_nb(m: i32) -> Vec<(i32, i32)> {
     let sum = sum(m);
     let mut rs = Vec::new();
-    let begin= (sum - m as i64) / (m as i64 + 1);
+    let begin = (sum - m as i64) / (m as i64 + 1);
     for i in begin..m as i64 {
-        if (sum - i) % (i + 1) == 0{
-            let b = (sum - i) / ( i + 1);
-            if b < m as i64{
+        if (sum - i) % (i + 1) == 0 {
+            let b = (sum - i) / (i + 1);
+            if b < m as i64 {
                 rs.push((i as i32, b as i32));
             }
         }
