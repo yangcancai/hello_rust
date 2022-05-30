@@ -1,40 +1,39 @@
 use yew::prelude::*;
 
-pub struct Counter{
-    n: u32
+pub struct Counter {
+    n: u32,
 }
 #[derive(Debug)]
 pub enum Msg {
-   Add(u32),
-   None
+    Add(u32),
+    None,
 }
-impl Component for Counter{
+impl Component for Counter {
     type Message = Msg;
     type Properties = ();
-    fn create(_ctx: &Context<Self>) -> Self{
-        Self{n:0}
+    fn create(_ctx: &Context<Self>) -> Self {
+        Self { n: 0 }
     }
-   fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
-      log::debug!("update:{}, msg={:?}",self.n, msg);
-       if let Msg::Add(i) = msg{
-                self.n += i;
-           if self.n % 2 == 0{
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+        log::debug!("update:{}, msg={:?}", self.n, msg);
+        if let Msg::Add(i) = msg {
+            self.n += i;
+            if self.n % 2 == 0 {
                 true
-           }else{
+            } else {
                 false
-           }
-       }else{
-           false
-       }
-       
+            }
+        } else {
+            false
+        }
     }
-    fn view(&self, ctx: &Context<Self>) -> Html{
-        log::debug!("view:{}",self.n);
-        let link = ctx.link(); 
-        let onclick = link.callback(|_|Msg::Add(1));
+    fn view(&self, ctx: &Context<Self>) -> Html {
+        log::debug!("view:{}", self.n);
+        let link = ctx.link();
+        let onclick = link.callback(|_| Msg::Add(1));
         let cb = link.callback(|msg: Msg| msg);
-         cb.emit(Msg::None);
-                html!{
+        cb.emit(Msg::None);
+        html! {
             <>
               <p>{"kkkk"}</p>
               <button onclick={onclick}>
@@ -45,6 +44,6 @@ impl Component for Counter{
         }
     }
     fn rendered(&mut self, _ctx: &Context<Self>, _first_render: bool) {
-        log::debug!("rendered:{}",self.n);
+        log::debug!("rendered:{}", self.n);
     }
 }
