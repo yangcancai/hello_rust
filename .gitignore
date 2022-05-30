@@ -1,4 +1,5 @@
 /target
 */target
 .vscode
-dist
+hello_yew/dist
+.DS_Store

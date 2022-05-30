@@ -49,7 +49,13 @@ fn app() -> Html {
         </>
     }
 }
+#[function_component(Hello)]
+fn hello() -> Html{
+    html!{
+        <p class="bg-red-100">{"Test!"}</p>
+    }
+}
 fn main() {
     wasm_logger::init(wasm_logger::Config::default());
-    yew::start_app::<App>();
+    yew::start_app::<Hello>();
 }
